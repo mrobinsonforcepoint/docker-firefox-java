@@ -10,19 +10,20 @@ run	echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt
 run	apt-get update
 
 # Install vnc, xvfb in order to create a 'fake' display and firefox
-run	apt-get install -y x11vnc xvfb openbox 
+run	apt-get install -y x11vnc xvfb openbox
 
 # Install the specific tzdata-java we need
 run     apt-get -y install wget
+run     wget --no-check-certificate https://launchpad.net/ubuntu/+archive/primary/+files/tzdata_2016d-0ubuntu0.14.04_all.deb
 run     wget --no-check-certificate https://launchpad.net/ubuntu/+archive/primary/+files/tzdata-java_2016d-0ubuntu0.14.04_all.deb
-run     dpkg -i tzdata-java_2016d-0ubuntu0.14.04_all.deb
-run     apt-get install -y tzdata
+run     dpkg -i tzdata-java_2016d-0ubuntu0.14.04_all.deb tzdata_2016d-0ubuntu0.14.04_all.deb
 
 # Install Firefox and Java Plugins
-run     apt-get install -y firefox icedtea-6-plugin icedtea-netx openjdk-6-jre openjdk-6-jre-headless tzdata-java 
+run     apt-get install -y firefox icedtea-6-plugin icedtea-netx openjdk-6-jre openjdk-6-jre-headless tzdata-java
 run	mkdir ~/.vnc
 
 # Autostart firefox (might not be the best way to do it, but it does the trick)
-run     bash -c 'echo "exec openbox-session &" >> ~/.xinitrc'
+run bash -c 'echo "export XKB_DEFAULT_RULES=base" >> ~/.xinitrc'
+run bash -c 'echo "exec openbox-session &" >> ~/.xinitrc'
 run	bash -c 'echo "firefox" >> ~/.xinitrc'
-run     bash -c 'chmod 755 ~/.xinitrc'
+run bash -c 'chmod 755 ~/.xinitrc'
